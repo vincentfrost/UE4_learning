@@ -1,8 +1,8 @@
 {
 	"SourceFiles": [
-		"E:\\Git\\BuildingEscape\\Source\\BuildingEscape\\BuildingEscape.Build.cs",
-		"E:\\Git\\BuildingEscape\\Source\\BuildingEscape.Target.cs",
-		"E:\\Git\\BuildingEscape\\Source\\BuildingEscapeEditor.Target.cs"
+		"E:\\Git\\UE4_learning\\BuildingEscape\\Source\\BuildingEscape\\BuildingEscape.Build.cs",
+		"E:\\Git\\UE4_learning\\BuildingEscape\\Source\\BuildingEscape.Target.cs",
+		"E:\\Git\\UE4_learning\\BuildingEscape\\Source\\BuildingEscapeEditor.Target.cs"
 	],
 	"EngineVersion": "4.25.1"
 }
