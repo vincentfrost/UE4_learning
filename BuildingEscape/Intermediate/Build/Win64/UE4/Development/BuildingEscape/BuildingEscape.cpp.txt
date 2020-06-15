@@ -1,2 +1,0 @@
-E:\Git\BuildingEscape\Intermediate\Build\Win64\UE4\Development\BuildingEscape\Definitions.BuildingEscape.h
-E:\Git\BuildingEscape\Source\BuildingEscape\BuildingEscape.h
