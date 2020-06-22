@@ -1,5 +1,5 @@
 E:\Git\UE4_learning\BuildingEscape\Intermediate\Build\Win64\UE4Editor\Development\BuildingEscape\Definitions.BuildingEscape.h
 E:\Git\UE4_learning\BuildingEscape\Source\BuildingEscape\OpenDoor.h
-C:\Program Files\UE_4.25\Engine\Source\Runtime\Engine\Classes\Engine/TriggerVolume.h
-C:\Program Files\UE_4.25\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\TriggerVolume.generated.h
+C:\UE_4.25\Engine\Source\Runtime\Engine\Classes\Engine/TriggerVolume.h
+C:\UE_4.25\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\TriggerVolume.generated.h
 E:\Git\UE4_learning\BuildingEscape\Intermediate\Build\Win64\UE4Editor\Inc\BuildingEscape\OpenDoor.generated.h

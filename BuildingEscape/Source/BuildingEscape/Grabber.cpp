@@ -22,7 +22,15 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle)
+	{
+		
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Not found physics handle"));
+	}
 }
 
 
@@ -44,7 +52,18 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	DrawDebugLine(GetWorld(), PlayerViewPointLocation, LineTraceEnd, FColor(0, 255, 0), false, 0.f, 0, 5.f);
 
 	//TODO ray casting out to a certain distance
+	FHitResult hit;
+	FCollisionQueryParams TraceParam(FName(TEXT("")), false, GetOwner());
+	GetWorld()->LineTraceSingleByObjectType(OUT hit, PlayerViewPointLocation, LineTraceEnd, FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), TraceParam);
 
+	AActor* ActorHit = hit.GetActor();
+
+	if (ActorHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit actor: %s"), *(ActorHit->GetName()));
+	}
+	
+	
 	//TODO See what it Hit
 }
 
