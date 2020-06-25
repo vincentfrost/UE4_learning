@@ -20,17 +20,9 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (PhysicsHandle)
-	{
-		
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Not found physics handle"));
-	}
+	FindPhysicsHandle();
+	
+	SetupInputComponent();
 }
 
 
@@ -39,7 +31,46 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	//TODO get player viewpoint
+	
+}
+
+void UGrabber::FindPhysicsHandle()
+{
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle)
+	{
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Not found physics handle"));
+	}
+}
+
+void UGrabber::SetupInputComponent()
+{
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+
+	if (InputComponent)
+	{
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
+	}
+}
+
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
+	GetFirstPhysicsBodyInReach();
+}
+
+void UGrabber::Release()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Release"));
+}
+
+FHitResult UGrabber::GetFirstPhysicsBodyInReach() const
+{
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
 
@@ -51,7 +82,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
 	DrawDebugLine(GetWorld(), PlayerViewPointLocation, LineTraceEnd, FColor(0, 255, 0), false, 0.f, 0, 5.f);
 
-	//TODO ray casting out to a certain distance
 	FHitResult hit;
 	FCollisionQueryParams TraceParam(FName(TEXT("")), false, GetOwner());
 	GetWorld()->LineTraceSingleByObjectType(OUT hit, PlayerViewPointLocation, LineTraceEnd, FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), TraceParam);
@@ -62,8 +92,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit actor: %s"), *(ActorHit->GetName()));
 	}
-	
-	
-	//TODO See what it Hit
+
+	return hit;
 }
 
