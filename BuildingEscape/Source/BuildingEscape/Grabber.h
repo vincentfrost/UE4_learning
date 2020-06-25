@@ -33,6 +33,10 @@ private:
 	void SetupInputComponent();
 	void Grab();
 	void Release();
-
+	
 	FHitResult GetFirstPhysicsBodyInReach() const;
+
+	FVector CalculateLineTraceEnd() const;
+
+	FVector GetPlayerWorldPosition() const;
 };
