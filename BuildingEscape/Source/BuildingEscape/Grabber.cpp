@@ -31,7 +31,10 @@ void UGrabber::BeginPlay()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+	if (!PhysicsHandle)
+	{
+		return;
+	}
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->SetTargetLocation(CalculateLineTraceEnd());
@@ -63,15 +66,24 @@ void UGrabber::Grab()
 	
 	FHitResult HitResult = GetFirstPhysicsBodyInReach();
 	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
+	AActor* ActorHit = HitResult.GetActor();
 
-	if (HitResult.GetActor())
+	if (ActorHit)
 	{
+		if (!PhysicsHandle)
+		{
+			return;
+		}
 		PhysicsHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, CalculateLineTraceEnd());
 	}
 }
 
 void UGrabber::Release()
 {
+	if (!PhysicsHandle)
+	{
+		return;
+	}
 	PhysicsHandle->ReleaseComponent();
 }
 
@@ -81,7 +93,10 @@ FHitResult UGrabber::GetFirstPhysicsBodyInReach() const
 
 	FHitResult hit;
 	FCollisionQueryParams TraceParam(FName(TEXT("")), false, GetOwner());
-	GetWorld()->LineTraceSingleByObjectType(OUT hit, GetPlayerWorldPosition(), CalculateLineTraceEnd(), FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), TraceParam);
+	GetWorld()->LineTraceSingleByObjectType(OUT hit,
+											GetPlayerWorldPosition(),
+											CalculateLineTraceEnd(),
+											FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), TraceParam);
 
 	AActor* ActorHit = hit.GetActor();
 

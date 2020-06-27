@@ -2,8 +2,11 @@
 
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/PrimitiveComponent.h"
 #include "OpenDoor.h"
+#include "Components/AudioComponent.h"
 
+#define OUT
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
 {
@@ -28,7 +31,7 @@ void UOpenDoor::BeginPlay()
 	{
 
 	}
-	ActorThatOpen = GetWorld()->GetFirstPlayerController()->GetPawn();
+	FindAudioComponent();
 }
 
 
@@ -37,7 +40,7 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (PressurePlate && PressurePlate->IsOverlappingActor(ActorThatOpen))
+	if (TotalMassOfActors() > MassToOpen)
 	{
 		OpenDoor(DeltaTime);
 		DoorLastOpen = GetWorld()->GetTimeSeconds();
@@ -58,6 +61,12 @@ void UOpenDoor::OpenDoor(float DeltaTime)
 	FRotator DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(DoorRotation);
+	CloseDoorSound = false;
+	if (!OpenDoorSound)
+	{
+		AudioComponent->Play();
+		OpenDoorSound = true;
+	}
 }
 
 void UOpenDoor::CloseDoor(float DeltaTime)
@@ -66,5 +75,40 @@ void UOpenDoor::CloseDoor(float DeltaTime)
 	FRotator DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(DoorRotation);
+	OpenDoorSound = false;
+	if (!CloseDoorSound)
+	{
+		AudioComponent->Play();
+		CloseDoorSound = true;
+	}
+	
+}
+
+float UOpenDoor::TotalMassOfActors() const
+{
+	float TotalMass = 0.0f;
+
+	TArray<AActor*> OverlappingActors;
+	if (!PressurePlate)
+	{
+		return TotalMass;
+	}
+	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
+
+	for (AActor* Actor : OverlappingActors)
+	{
+		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+	}
+
+	return TotalMass;
+}
+
+void UOpenDoor::FindAudioComponent()
+{
+	AudioComponent = GetOwner()->FindComponentByClass<UAudioComponent>();
+	if (!AudioComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Audio Component Not Found"));
+	}
 }
 
